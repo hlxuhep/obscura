@@ -216,6 +216,24 @@ void DM_Detector::Set_Bin_Efficiencies(const std::vector<double>& eff)
 	}
 }
 
+void DM_Detector::Set_Threshold_Binned_Efficiencies(const std::vector<double>& eff)
+{
+	if(statistical_analysis != "Poisson")
+	{
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Set_Threshold_Binned_Efficiencies(const std::vector<double>&): Statistical analysis is " << statistical_analysis << " not 'Poisson'." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	else if(eff.size() != number_of_bins)
+	{
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Set_Threshold_Binned_Efficiencies(const std::vector<double>&): Length of the input (" << eff.size() << ") is not equal to the number of bins(" << number_of_bins << ")." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	else
+	{
+		bin_efficiencies = eff;
+	}
+}
+
 void DM_Detector::Set_Expected_Background(const std::vector<double>& Bi)
 {
 	if(statistical_analysis != "Binned Poisson")

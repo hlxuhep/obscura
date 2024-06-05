@@ -26,10 +26,11 @@ class DM_Detector_Crystal : public DM_Detector
 	// Q spectrum
 	unsigned int Q_threshold;
 
-	// (a) Poisson: Energy threshold
+	// (a) Poisson: Q threshold
 	bool using_Q_threshold;
-
-	// (b) Binned Poisson: Energy bins
+    std::vector<double> DM_Signals_Q_Threshold(const DM_Particle& DM, DM_Distribution& DM_distr)
+	
+	// (b) Binned Poisson: Q bins
 	bool using_Q_bins;
 	std::vector<double> DM_Signals_Q_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
 
@@ -47,7 +48,7 @@ class DM_Detector_Crystal : public DM_Detector
 
 	// Q spectrum
 	//  (a) Poisson
-	void Use_Q_Threshold(unsigned int Q_thr);
+	void Use_Q_Threshold(unsigned int Q_thr, unsigned int N_bins = 0);
 	// (b) Binned Poisson
 	void Use_Q_Bins(unsigned int Q_thr, unsigned int N_bins = 0);
 

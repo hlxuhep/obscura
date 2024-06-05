@@ -142,7 +142,7 @@ double DM_Detector_Crystal::DM_Signals_Total(const DM_Particle& DM, DM_Distribut
 	}
 	else if(using_Q_threshold)
 	{
-		N = exposure * flat_efficiency * R_total_Crystal(Q_threshold, DM, DM_distr, target_crystal);
+	    N = DM_Signals_Q_Threshold(DM, DM_distr);
 	}
 	return N;
 }
@@ -170,13 +170,17 @@ std::vector<double> DM_Detector_Crystal::DM_Signals_Binned(const DM_Particle& DM
 }
 
 // Q spectrum
-void DM_Detector_Crystal::Use_Q_Threshold(unsigned int Q_thr)
+void DM_Detector_Crystal::Use_Q_Threshold(unsigned int Q_thr, unsigned int N_bins)
 {
 	Initialize_Poisson();
-	using_Q_threshold = true;
-	Q_threshold		  = Q_thr;
-	energy_threshold  = Minimum_Electron_Energy(Q_threshold, target_crystal);
-	energy_max		  = Minimum_Electron_Energy(target_crystal.Q_max, target_crystal);
+	using_Q_threshold  = true;
+	Q_threshold		   = Q_thr;
+	unsigned int Q_max = (N_bins == 0) ? target_crystal.Q_max : N_bins + Q_threshold - 1;
+	N_bins			   = Q_max - Q_threshold + 1;
+	number_of_bins	   = N_bins;
+	bin_efficiencies   = std::vector<double>(number_of_bins, 1.0);
+	energy_threshold   = Minimum_Electron_Energy(Q_threshold, target_crystal);
+	energy_max		   = Minimum_Electron_Energy(Q_max, target_crystal);
 }
 
 void DM_Detector_Crystal::Use_Q_Bins(unsigned int Q_thr, unsigned int N_bins)
@@ -209,14 +213,36 @@ std::vector<double> DM_Detector_Crystal::DM_Signals_Q_Bins(const DM_Particle& DM
 	}
 }
 
+std::vector<double> DM_Detector_Crystal::DM_Signals_Q_Threshold(const DM_Particle& DM, DM_Distribution& DM_distr)
+{
+	if(!using_Q_threshold)
+	{
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Crystal::DM_Signals_Q_Threshold(const DM_Particle&,DM_Distribution&): Not using Q threshold." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	else
+	{
+		double signal = 0;
+		for(unsigned int Q = Q_threshold; Q < Q_threshold + number_of_bins; Q++)
+		{
+			signal += exposure * flat_efficiency * bin_efficiencies[Q - Q_threshold] * R_Q_Crystal(Q, DM, DM_distr, target_crystal);
+		}
+		return signal;
+	}
+}
+
 void DM_Detector_Crystal::Print_Summary(int MPI_rank) const
 {
 	Print_Summary_Base();
 	std::cout << std::endl
 			  << "\tElectron recoil experiment (semiconductor)." << std::endl
 			  << "\tTarget:\t\t\t" << target_crystal.name << " semiconductor" << std::endl;
-	if(using_Q_threshold || using_Q_bins)
-		std::cout << "\teh pair threshold:\t" << Q_threshold << std::endl
+	if(using_Q_bins)
+		std::cout << "\teh pair threshold:\t" << Q_threshold << " using individual bins " << std::endl
+				  << "----------------------------------------" << std::endl
+				  << std::endl;
+	if(using_Q_threshold)
+		std::cout << "\teh pair threshold:\t" << Q_threshold << "combining bins" << std::endl
 				  << "----------------------------------------" << std::endl
 				  << std::endl;
 }

@@ -85,6 +85,7 @@ class DM_Detector
 	// (a) Poisson
 	void Set_Observed_Events(unsigned long int N);
 	void Set_Expected_Background(double B);
+	void Set_Threshold_Binned_Efficiencies(const std::vector<double>& eff);
 
 	// (b) Binned Poisson
 	void Set_Observed_Events(std::vector<unsigned long int> Ni);

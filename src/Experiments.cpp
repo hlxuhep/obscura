@@ -237,6 +237,23 @@ DM_Detector_Crystal SENSEI_at_MINOS()
 	return detector;
 }
 
+DM_Detector_Crystal SENSEI_at_SNOLAB()
+{
+	// Source: arXiv:2312.13342
+	double SENSEI_exposure								  = 66.61 * gram * day; //exposure of the 4e bin
+	unsigned int SENSEI_Q_threshold						  = 4;
+	unsigned int SENSEI_N_bins							  = 7;
+	std::vector<double> SENSEI_efficiencies				  = {1.0, 74.65 / 66.61, 75.82 / 66.61, 76.85 / 66.61, 77.80 / 66.61, 78.35 / 66.61, 79.01 / 66.61};
+
+    DM_Detector_Crystal detector("SENSEI@SNOLAB", SENSEI_exposure, "Si");
+	detector.Use_Q_Threshold(SENSEI_Q_threshold, SENSEI_N_bins);
+	detector.Set_Threshold_Binned_Efficiencies(SENSEI_efficiencies);
+	detector.Set_Observed_Events(0.0);
+	detector.Set_Expected_Background(0.0);
+
+	return detector;
+}
+
 DM_Detector_Crystal CDMS_HVeV_2018()
 {
 	// Source: arXiv:1804.10697
