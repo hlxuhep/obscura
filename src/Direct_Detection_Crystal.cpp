@@ -203,7 +203,7 @@ std::vector<double> DM_Detector_Crystal::DM_Signals_Q_Bins(const DM_Particle& DM
 		std::vector<double> signals;
 		for(unsigned int Q = Q_threshold; Q < Q_threshold + number_of_bins; Q++)
 		{
-			signals.push_back(exposure * flat_efficiency * bin_efficiencies[Q - 1] * R_Q_Crystal(Q, DM, DM_distr, target_crystal));
+			signals.push_back(exposure * flat_efficiency * bin_efficiencies[Q - Q_threshold] * R_Q_Crystal(Q, DM, DM_distr, target_crystal));
 		}
 		return signals;
 	}
