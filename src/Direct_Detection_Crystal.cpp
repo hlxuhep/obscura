@@ -213,7 +213,7 @@ std::vector<double> DM_Detector_Crystal::DM_Signals_Q_Bins(const DM_Particle& DM
 	}
 }
 
-std::vector<double> DM_Detector_Crystal::DM_Signals_Q_Threshold(const DM_Particle& DM, DM_Distribution& DM_distr)
+double DM_Detector_Crystal::DM_Signals_Q_Threshold(const DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	if(!using_Q_threshold)
 	{
