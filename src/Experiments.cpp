@@ -7,7 +7,7 @@ namespace obscura
 {
 using namespace libphysica::natural_units;
 
-//1. Nuclear recoil experiments
+// 1. Nuclear recoil experiments
 DM_Detector_Nucleus DAMIC_N_2011()
 {
 	// Source: arXiv:1105.5191
@@ -44,9 +44,9 @@ DM_Detector_Nucleus XENON1T_N_2017()
 
 DM_Detector_Nucleus CRESST_II()
 {
-	//Source: arXiv:1509.01515 and arXiv:1701.08157
+	// Source: arXiv:1509.01515 and arXiv:1701.08157
 	double CRESST_II_exposure					= 52.15 * kg * day;
-	std::vector<Nucleus> CRESST_II_targets		= {Get_Nucleus(8), Get_Nucleus(20), Get_Nucleus(74)};	//CaOW
+	std::vector<Nucleus> CRESST_II_targets		= {Get_Nucleus(8), Get_Nucleus(20), Get_Nucleus(74)};	// CaOW
 	std::vector<double> CRESST_II_target_ratios = {4, 1, 1};
 	double CRESST_II_threshold					= 307 * eV;
 	double CRESST_II_Emax						= 40.0 * keV;
@@ -68,7 +68,7 @@ DM_Detector_Nucleus CRESST_III()
 {
 	// Source: arXiv:1711.07692 and arXiv:1905.07335
 	double CRESST_III_exposure					 = 5.594 * kg * day;
-	std::vector<Nucleus> CRESST_III_targets		 = {Get_Nucleus(8), Get_Nucleus(20), Get_Nucleus(74)};	 //CaOW
+	std::vector<Nucleus> CRESST_III_targets		 = {Get_Nucleus(8), Get_Nucleus(20), Get_Nucleus(74)};	 // CaOW
 	std::vector<double> CRESST_III_target_ratios = {4, 1, 1};
 	double CRESST_III_threshold					 = 30.1 * eV;
 	double CRESST_III_Emax						 = 16 * keV;
@@ -108,7 +108,7 @@ DM_Detector_Nucleus CRESST_surface()
 	return detector;
 }
 
-//2. Electron recoil experiments - Ionization
+// 2. Electron recoil experiments - Ionization
 DM_Detector_Ionization_ER XENON10_S2_ER()
 {
 	// Source: arXiv:1104.3088, arXiv:1206.2644, and arXiv:1703.00910
@@ -123,7 +123,8 @@ DM_Detector_Ionization_ER XENON10_S2_ER()
 
 	DM_Detector_Ionization_ER detector("XENON10_S2", exposure, target_name);
 	detector.Set_Flat_Efficiency(flat_efficiency);
-	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+	detector.Initialize_S2_Spectrum("Poisson+Gauss", muPE, sigPE);
+	detector.Use_PE_Bins(S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
 
@@ -143,7 +144,8 @@ DM_Detector_Ionization_ER XENON100_S2_ER()
 	std::string acceptance_efficiency				   = PROJECT_DIR "data/XENON100e/PE_Acceptance_Efficiency.txt";
 
 	DM_Detector_Ionization_ER detector("XENON100_S2", exposure, target_name);
-	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+	detector.Initialize_S2_Spectrum("Poisson+Gauss", muPE, sigPE);
+	detector.Use_PE_Bins(S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
 	detector.Import_Acceptance_Efficiency_PE(acceptance_efficiency);
@@ -197,7 +199,7 @@ DM_Detector_Ionization_ER DarkSide50_S2_ER()
 	return detector;
 }
 
-//3. Electron recoil experiments - Semiconductor
+// 3. Electron recoil experiments - Semiconductor
 DM_Detector_Crystal protoSENSEI_at_Surface()
 {
 	// Source: arXiv:1804.00088
@@ -300,7 +302,7 @@ DM_Detector_Crystal CDMS_HVeV_2020()
 	return detector;
 }
 
-//4. Migdal experiments - Ionization
+// 4. Migdal experiments - Ionization
 DM_Detector_Ionization_Migdal XENON10_S2_Migdal()
 {
 	// Source: arXiv:1104.3088, arXiv:1206.2644, and arXiv:1703.00910
@@ -315,7 +317,8 @@ DM_Detector_Ionization_Migdal XENON10_S2_Migdal()
 
 	DM_Detector_Ionization_Migdal detector("XENON10_S2", exposure, target_name);
 	detector.Set_Flat_Efficiency(flat_efficiency);
-	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+	detector.Initialize_S2_Spectrum("Poisson+Gauss", muPE, sigPE);
+	detector.Use_PE_Bins(S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
 
@@ -335,7 +338,8 @@ DM_Detector_Ionization_Migdal XENON100_S2_Migdal()
 	std::string acceptance_efficiency				   = PROJECT_DIR "data/XENON100e/PE_Acceptance_Efficiency.txt";
 
 	DM_Detector_Ionization_Migdal detector("XENON100_S2", exposure, target_name);
-	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+	detector.Initialize_S2_Spectrum("Poisson+Gauss", muPE, sigPE);
+	detector.Use_PE_Bins(S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
 	detector.Import_Acceptance_Efficiency_PE(acceptance_efficiency);
@@ -348,14 +352,15 @@ DM_Detector_Ionization_Migdal XENON1T_S2_Migdal()
 	// Source: arXiv:1907.11485
 	std::string target_name							   = "Xe";
 	double exposure									   = 80755.2 * kg * day;
-	std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
+	std::vector<unsigned long int> observed_event_bins = {8, 7, 3, 0};
 	double muPE										   = 33.0;
 	double sigPE									   = 7.0;
 	std::vector<unsigned int> S2_bin_ranges			   = {150, 200, 250, 300, 350};
-	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
+	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1T_S2/XENON1T_TotalEfficiency.txt";
 
 	DM_Detector_Ionization_Migdal detector("XENON1T_S2", exposure, target_name);
-	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+	detector.Initialize_S2_Spectrum("Poisson+Gauss", muPE, sigPE);
+	detector.Use_PE_Bins(S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
 
