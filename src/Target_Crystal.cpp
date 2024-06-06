@@ -14,7 +14,7 @@ namespace obscura
 using namespace libphysica::natural_units;
 
 Crystal::Crystal(std::string target)
-: N_E(500), N_q(900), name(target), dE(0.1 * eV), dq(0.02 * aEM * mElectron)
+: N_E(500), N_q(1250), name(target), dE(0.1 * eV), dq(0.02 * aEM * mElectron)
 {
 	E_max = N_E * dE;
 	q_max = N_q * dq;
@@ -58,11 +58,21 @@ Crystal::Crystal(std::string target)
 	std::string path			 = PROJECT_DIR "data/Semiconductors/C." + target + "137.dat";
 	std::vector<double> aux_list = libphysica::Import_List(path);
 	std::vector<std::vector<double>> form_factor_table(N_q, std::vector<double>(N_E, 0.0));
+    if(name == "Si")
+	{
+        unsigned int i = 0;
+	    for(int Ei = 0; Ei < N_E; Ei++)
+		    for(int qi = 0; qi < N_q; qi++)
+			    form_factor_table[qi][Ei] = aux_list[i++];
+	}
+    else
+	{
 	double wk	   = 2.0 / 137.0;
 	unsigned int i = 0;
 	for(int Ei = 0; Ei < N_E; Ei++)
 		for(int qi = 0; qi < N_q; qi++)
 			form_factor_table[qi][Ei] = prefactor * (qi + 1) / dE * wk / 4.0 * aux_list[i++];
+	}
 	std::vector<double> q_grid = libphysica::Linear_Space(dq, q_max, N_q);
 	std::vector<double> E_grid = libphysica::Linear_Space(dE, E_max, N_E);
 	form_factor_interpolation  = libphysica::Interpolation_2D(q_grid, E_grid, form_factor_table);
