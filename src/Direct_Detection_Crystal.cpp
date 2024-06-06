@@ -242,7 +242,7 @@ void DM_Detector_Crystal::Print_Summary(int MPI_rank) const
 				  << "----------------------------------------" << std::endl
 				  << std::endl;
 	if(using_Q_threshold)
-		std::cout << "\teh pair threshold:\t" << Q_threshold << "combining bins" << std::endl
+		std::cout << "\teh pair threshold:\t" << Q_threshold << " combining bins" << std::endl
 				  << "----------------------------------------" << std::endl
 				  << std::endl;
 }

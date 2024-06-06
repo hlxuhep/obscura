@@ -27,11 +27,11 @@ class DM_Detector_Crystal : public DM_Detector
 	unsigned int Q_threshold;
 
 	// (a) Poisson: Q threshold
-	bool using_Q_threshold;
+	bool using_Q_threshold = false;
     double DM_Signals_Q_Threshold(const DM_Particle& DM, DM_Distribution& DM_distr);
 	
 	// (b) Binned Poisson: Q bins
-	bool using_Q_bins;
+	bool using_Q_bins = false;
 	std::vector<double> DM_Signals_Q_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
 
   public:
