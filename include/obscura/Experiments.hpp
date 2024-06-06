@@ -25,6 +25,7 @@ extern DM_Detector_Ionization_ER DarkSide50_S2_ER();
 extern DM_Detector_Crystal protoSENSEI_at_Surface();
 extern DM_Detector_Crystal protoSENSEI_at_MINOS();
 extern DM_Detector_Crystal SENSEI_at_MINOS();
+extern DM_Detector_Crystal SENSEI_at_SNOLAB();
 extern DM_Detector_Crystal CDMS_HVeV_2018();
 extern DM_Detector_Crystal CDMS_HVeV_2020();
 

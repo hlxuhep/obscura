@@ -508,6 +508,8 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Crystal(protoSENSEI_at_MINOS());
 	else if(DD_experiment == "SENSEI@MINOS")
 		DM_detector = new DM_Detector_Crystal(SENSEI_at_MINOS());
+	else if(DD_experiment == "SENSEI@SNOLAB")
+		DM_detector = new DM_Detector_Crystal(SENSEI_at_SNOLAB());
 	else if(DD_experiment == "CDMS-HVeV_2018")
 		DM_detector = new DM_Detector_Crystal(CDMS_HVeV_2018());
 	else if(DD_experiment == "CDMS-HVeV_2020")
