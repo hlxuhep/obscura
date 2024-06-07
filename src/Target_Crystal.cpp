@@ -14,8 +14,10 @@ namespace obscura
 using namespace libphysica::natural_units;
 
 Crystal::Crystal(std::string target)
-: N_E(500), N_q(1250), name(target), dE(0.1 * eV), dq(0.02 * aEM * mElectron)
+: name(target), dE(0.1 * eV), dq(0.02 * aEM * mElectron)
 {
+	N_E   = 500;
+	N_q   = 1250;
 	E_max = N_E * dE;
 	q_max = N_q * dq;
 
