@@ -47,7 +47,7 @@ class DM_Detector
 	double energy_threshold, energy_max;
 
 	// (a) Poisson: Energy threshold
-	bool using_energy_threshold;
+	bool using_energy_threshold = false;
 
 	// (b) Binned Poisson: Energy bins
 	bool using_energy_bins;
