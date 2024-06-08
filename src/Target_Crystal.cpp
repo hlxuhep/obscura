@@ -14,20 +14,21 @@ namespace obscura
 using namespace libphysica::natural_units;
 
 Crystal::Crystal(std::string target)
-: name(target), dE(0.1 * eV), dq(0.02 * aEM * mElectron)
+: name(target)
 {
-	N_E   = 500;
-	N_q   = 1250;
-	E_max = N_E * dE;
-	q_max = N_q * dq;
-
-	double prefactor;
+	double prefactor = 1.0;
 	if(name == "Si")
 	{
+		N_E   = 500;
+	    N_q   = 1250; // For QCDark form factor
+	    dE    = 0.1 * eV;
+	    dq    = 0.02 * aEM * mElectron;
+	    E_max = N_E * dE;
+	    q_max = N_q * dq;
+
 		energy_gap = 1.11 * eV;
 		epsilon	   = 3.6 * eV;
 		M_cell	   = 2.0 * 28.08 * mNucleon;
-		prefactor  = 2.0 * eV;
 		Q_max	   = std::floor((E_max - energy_gap + epsilon) / epsilon);
 
 		// Import the ionization yield tables
@@ -45,10 +46,45 @@ Crystal::Crystal(std::string target)
 	}
 	else if(name == "Ge")
 	{
+		N_E   = 500;
+	    N_q   = 900; // For QCDark form factor
+	    dE    = 0.1 * eV;
+	    dq    = 0.02 * aEM * mElectron;
+	    E_max = N_E * dE;
+	    q_max = N_q * dq;
+
 		energy_gap = 0.67 * eV;
 		epsilon	   = 2.9 * eV;
 		M_cell	   = 2.0 * 72.6 * mNucleon;
 		prefactor  = 1.8 * eV;
+		Q_max	   = std::floor((E_max - energy_gap + epsilon) / epsilon);
+	}
+	else if(name == "HgTe")  //For JWST's HgCdTe
+	{
+		N_E   = 300;
+	    N_q   = 800;
+	    dE    = 0.05 eV;
+	    dq    = 0.01 * aEM * mElectron;
+	    E_max = N_E * dE;
+	    q_max = N_q * dq;
+
+		energy_gap = 0.234 * eV;
+		epsilon	   = 3 * energy_gap;
+		M_cell	   = 301.74 * AMU;  // x = 0.3 of JWST's Hg_1-x Cd_x Te, this is the mass for a primitive cell
+		Q_max	   = std::floor((E_max - energy_gap + epsilon) / epsilon);
+	}
+	else if(name == "CdTe")  //For JWST's HgCdTe
+	{
+		N_E   = 300;
+	    N_q   = 800;
+	    dE    = 0.05 eV;
+	    dq    = 0.01 * aEM * mElectron;
+	    E_max = N_E * dE;
+	    q_max = N_q * dq;
+
+		energy_gap = 0.234 * eV;
+		epsilon	   = 3 * energy_gap;
+		M_cell	   = 301.74 * AMU;  // x = 0.3 of JWST's Hg_1-x Cd_x Te, this is the mass for a primitive cell
 		Q_max	   = std::floor((E_max - energy_gap + epsilon) / epsilon);
 	}
 	else
@@ -60,7 +96,7 @@ Crystal::Crystal(std::string target)
 	std::string path			 = PROJECT_DIR "data/Semiconductors/C." + target + "137.dat";
 	std::vector<double> aux_list = libphysica::Import_List(path);
 	std::vector<std::vector<double>> form_factor_table(N_q, std::vector<double>(N_E, 0.0));
-    if(name == "Si")
+    if(name == "Si" || name == "HgTe" || name == "CdTe")
 	{
         unsigned int i = 0;
 	    for(int Ei = 0; Ei < N_E; Ei++)
@@ -99,7 +135,7 @@ double Crystal::Ionization_Yield(double Ee, unsigned int Q)
 			return epsilon_eh_inf * libphysica::PDF_Gauss(Ee, mean, sigma);
 		}
 	}
-	else if(name == "Ge")
+	else if(name == "Ge" || name == "HgTe" || name == "CdTe")
 	{
 		double E_1 = epsilon * (Q - 1) + energy_gap;
 		double E_2 = epsilon * Q + energy_gap;
