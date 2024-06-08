@@ -63,7 +63,7 @@ Crystal::Crystal(std::string target)
 	{
 		N_E   = 300;
 	    N_q   = 800;
-	    dE    = 0.05 eV;
+	    dE    = 0.05 * eV;
 	    dq    = 0.01 * aEM * mElectron;
 	    E_max = N_E * dE;
 	    q_max = N_q * dq;
@@ -77,7 +77,7 @@ Crystal::Crystal(std::string target)
 	{
 		N_E   = 300;
 	    N_q   = 800;
-	    dE    = 0.05 eV;
+	    dE    = 0.05 * eV;
 	    dq    = 0.01 * aEM * mElectron;
 	    E_max = N_E * dE;
 	    q_max = N_q * dq;
