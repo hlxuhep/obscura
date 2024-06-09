@@ -28,6 +28,8 @@ extern DM_Detector_Crystal SENSEI_at_MINOS();
 extern DM_Detector_Crystal SENSEI_at_SNOLAB();
 extern DM_Detector_Crystal CDMS_HVeV_2018();
 extern DM_Detector_Crystal CDMS_HVeV_2020();
+extern DM_Detector_Crystal Fiducial_JWST_HgTe();
+extern DM_Detector_Crystal Fiducial_JWST_CdTe();
 
 //4. Migdal experiments - Ionization
 extern DM_Detector_Ionization_Migdal XENON10_S2_Migdal();

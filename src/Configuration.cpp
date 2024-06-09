@@ -514,6 +514,10 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Crystal(CDMS_HVeV_2018());
 	else if(DD_experiment == "CDMS-HVeV_2020")
 		DM_detector = new DM_Detector_Crystal(CDMS_HVeV_2020());
+	else if(DD_experiment == "Fiducial_JWST_HgTe")
+		DM_detector = new DM_Detector_Crystal(Fiducial_JWST_HgTe());
+	else if(DD_experiment == "Fiducial_JWST_CdTe")
+		DM_detector = new DM_Detector_Crystal(Fiducial_JWST_CdTe());
 
 	else
 	{

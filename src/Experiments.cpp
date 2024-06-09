@@ -302,6 +302,34 @@ DM_Detector_Crystal CDMS_HVeV_2020()
 	return detector;
 }
 
+DM_Detector_Crystal Fiducial_JWST_HgTe()
+{
+	double JWST_esposure								  = 1 * kg * year;
+	unsigned int JWST_Q_threshold						  = 1;
+	unsigned int JWST_N_bins							  = 30;
+	std::vector<unsigned long int> SENSEI_observed_events(30,0);
+
+	DM_Detector_Crystal detector("Fiducial_JWST_HgTe", JWST_esposure, "HgTe");
+	detector.Use_Q_Bins(JWST_Q_threshold, JWST_N_bins);
+	detector.Set_Observed_Events(SENSEI_observed_events);
+
+	return detector;
+}
+
+DM_Detector_Crystal Fiducial_JWST_CdTe()
+{
+	double JWST_esposure								  = 1 * kg * year;
+	unsigned int JWST_Q_threshold						  = 1;
+	unsigned int JWST_N_bins							  = 30;
+	std::vector<unsigned long int> SENSEI_observed_events(30,0);
+
+	DM_Detector_Crystal detector("Fiducial_JWST_HgTe", JWST_esposure, "CdTe");
+	detector.Use_Q_Bins(JWST_Q_threshold, JWST_N_bins);
+	detector.Set_Observed_Events(SENSEI_observed_events);
+
+	return detector;
+}
+
 // 4. Migdal experiments - Ionization
 DM_Detector_Ionization_Migdal XENON10_S2_Migdal()
 {
