@@ -433,6 +433,32 @@ std::vector<std::vector<double>> DM_Detector::Upper_Limit_Curve(DM_Particle& DM,
 	return limit;
 }
 
+// Scan over mass for a fixed cross-section
+void DM_Detector::scan_over_mass(DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> masses)
+{
+	double mOriginal   = DM.mass;
+	double lowest_mass = Minimum_DM_Mass(DM, DM_distr);
+    double interaction_parameter_original = DM.Get_Interaction_Parameter(targets);
+
+	for(unsigned int i = 0; i < masses.size(); i++)
+	{
+		if(masses[i] < lowest_mass)
+			continue;
+		DM.Set_Mass(masses[i]);
+		// Export recoil energy spectrum dR/dE to file (Halo DM)
+		std::function<double(double)> dR_dE = [&DM, &DM_distr](double E) {
+			return dRdE(E, DM, DM_distr);
+		};
+		std::vector<double> energies = libphysica::Log_Space(0.1 * eV, Maximum_Energy_Deposit(DM, DM_distr), 300);
+		
+		std::string header = masses[i].str() + " GeV" + Round(In_Units(interaction_parameter_original, cm*cm)).str() + " cm^2"
+		libphysica::Export_Function(cfg.results_path + "dRdE_Halo_"+ i.str() +".txt", dR_dE, energies, {eV, 1.0 / eV / kg / year}, header);
+
+		// Export binned signal rate to file
+        libphysica::Export_List(TOP_LEVEL_DIR "results/" + cfg.ID + "/binned_signals_Halo" + i.str() + ".txt", DM_Signals_Binned(DM, DM_distr), 1, header);
+	DM.Set_Mass(mOriginal);
+}
+
 // Energy spectrum
 void DM_Detector::Use_Energy_Threshold(double Ethr, double Emax)
 {

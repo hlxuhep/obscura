@@ -104,6 +104,7 @@ class DM_Detector
 	// Limits/Constraints
 	double Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty = 0.95);
 	std::vector<std::vector<double>> Upper_Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> masses, double certainty = 0.95);
+	void scan_over_mass(DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> masses)
 
 	virtual void Print_Summary(int MPI_rank = 0) const { Print_Summary_Base(MPI_rank); };
 };
