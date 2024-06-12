@@ -451,11 +451,11 @@ void DM_Detector::scan_over_mass(DM_Particle& DM, DM_Distribution& DM_distr, std
 //		};
 		std::vector<double> energies = libphysica::Log_Space(0.1 * eV, Maximum_Energy_Deposit(DM, DM_distr), 300);
 		
-		std::string header = masses[i].str() + " GeV" + Round(In_Units(interaction_parameter_original, cm*cm)).str() + " cm^2";
-		libphysica::Export_Function(cfg.results_path + "dRdE_Halo_"+ i.str() +".txt", dR_dE, energies, {eV, 1.0 / eV / kg / year}, header);
+		std::string header = std::to_string(masses[i]) + " GeV" + std::to_string(Round(In_Units(interaction_parameter_original, cm*cm))) + " cm^2";
+		libphysica::Export_Function(cfg.results_path + "dRdE_Halo_"+ std::to_string(i) +".txt", dR_dE, energies, {eV, 1.0 / eV / kg / year}, header);
 
 		// Export binned signal rate to file
-        libphysica::Export_List(TOP_LEVEL_DIR "results/" + cfg.ID + "/binned_signals_Halo" + i.str() + ".txt", DM_Signals_Binned(DM, DM_distr), 1, header);
+        libphysica::Export_List(TOP_LEVEL_DIR "results/" + cfg.ID + "/binned_signals_Halo" + std::to_string(i) + ".txt", DM_Signals_Binned(DM, DM_distr), 1, header);
 	DM.Set_Mass(mOriginal);
 }
 
