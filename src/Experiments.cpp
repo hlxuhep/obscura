@@ -323,7 +323,7 @@ DM_Detector_Crystal Fiducial_JWST_CdTe()
 	unsigned int JWST_N_bins							  = 30;
 	std::vector<unsigned long int> SENSEI_observed_events(30,0);
 
-	DM_Detector_Crystal detector("Fiducial_JWST_HgTe", JWST_esposure, "CdTe");
+	DM_Detector_Crystal detector("Fiducial_JWST_CdTe", JWST_esposure, "CdTe");
 	detector.Use_Q_Bins(JWST_Q_threshold, JWST_N_bins);
 	detector.Set_Observed_Events(SENSEI_observed_events);
 
