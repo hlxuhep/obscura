@@ -42,6 +42,8 @@ int main(int argc, char* argv[])
 	int CL = std::round(100.0 * cfg.constraints_certainty);
 	libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints_" + std::to_string(CL) + ".txt", exclusion_limits, {GeV, cm * cm});
 
+	cfg.DM_detector->scan_over_mass(*(cfg.DM), *(cfg.DM_distr), DM_masses);
+
 	////////////////////////////////////////////////////////////////////////
 	// Final terminal output
 	auto time_end			 = std::chrono::system_clock::now();
