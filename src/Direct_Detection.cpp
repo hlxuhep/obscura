@@ -443,8 +443,8 @@ void DM_Detector::scan_over_mass(DM_Particle& DM, DM_Distribution& DM_distr, std
 	{
 		DM.Set_Mass(masses[i]);
         double mi  = masses[i];
-		double csi = libphysica::Round(In_Units(interaction_parameter_original, cm * cm));
-		std::string header = std::to_string(mi) + "GeV" + std::to_string(csi) + "cm^2";
+		double csi = libphysica::Round(In_Units(interaction_parameter_original, pb));
+		std::string header = std::to_string(mi) + "GeV    " + std::to_string(csi) + "pb";
 
 		// Export recoil energy spectrum dR/dE to file (Halo DM)
 		std::function<double(double)> dR_dE = [this, &DM, &DM_distr](double E) {
