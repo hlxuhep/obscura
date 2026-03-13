@@ -184,6 +184,28 @@ DM_Detector_Ionization_ER XENON1T_S2_ER()
 	return detector;
 }
 
+DM_Detector_Ionization_ER LZ_ER()
+{
+	// Source: arxiv:2511.17350v1
+	std::string target_name = "Xe";
+	double LZ_exposure = 4.2 * tonne * year;
+	double Emin = 0 * keV;
+	double Emax = 20 * keV;
+	int    Nbins = 20;
+	std::vector<unsigned long int> observed_event_bins = {0, 54, 82, 100, 117, 92, 89, 101, 101, 110, 95, 92, 89, 103, 92, 89, 92, 100, 108, 96};
+	std::vector<double> binned_background_expectation = {0, 51.56606034164434, 88.21282092689695, 93.20465519903534, 94.78988929001541, 97.86384982235298, 97.69826536621768, 99.750325004976, 100.17994982116396, 98.63902543996939, 97.84984245515743, 97.07749400880023, 95.7607283327002, 96.24015786847255, 94.52920865788866, 94.49753965456361, 94.55100398621266, 95.04933321363161, 95.28448219744944, 95.93089300985073};
+	//std::vector<double> LZ_efficiencies = {0.01, 0.4021, 0.764546, 0.791445, 0.792681, 0.790818, 0.79049, 0.789729, 0.78973, 0.790488, 0.804622, 0.807082, 0.807132, 0.806668, 0.806272, 0.806188, 0.806188, 0.806042, 0.805556, 0.805208};
+
+	DM_Detector_Ionization_ER detector("LZ_ER", LZ_exposure, target_name);
+	detector.Use_Energy_Bins(Emin, Emax, Nbins);
+	detector.Import_Efficiency_Function(PROJECT_DIR "data/LZ/eff_vs_E.txt", keV);
+	detector.Set_Observed_Events(observed_event_bins);
+	detector.Set_Expected_Background(binned_background_expectation);
+	//detector.Set_Bin_Efficiencies(LZ_efficiencies);
+	return detector;
+}
+
+
 DM_Detector_Ionization_ER DarkSide50_S2_ER()
 {
 	// Source: arXiv:1802.06998

@@ -4,6 +4,8 @@
 #include <cmath>
 #include <iostream>
 #include <numeric>
+#include <fstream>
+#include <sstream>
 
 #include "libphysica/Integration.hpp"
 #include "libphysica/Natural_Units.hpp"
@@ -323,6 +325,93 @@ void DM_Detector::Set_Flat_Efficiency(double eff)
 	flat_efficiency = eff;
 }
 
+void DM_Detector::Set_Efficiency_Function(const std::vector<double>& energies,
+                                         const std::vector<double>& eff,
+                                         double energy_unit)
+{
+    if(energies.size() != eff.size() || energies.size() < 2)
+    {
+        std::cerr << libphysica::Formatted_String("Error","Red",true)
+                  << " in DM_Detector::Set_Efficiency_Function(): need >=2 points & matching sizes.\n";
+        std::exit(EXIT_FAILURE);
+    }
+
+    efficiency_energies.clear();
+    efficiency_values.clear();
+    efficiency_energies.reserve(energies.size());
+    efficiency_values.reserve(eff.size());
+
+    for(size_t i=0;i<energies.size();i++)
+    {
+        efficiency_energies.push_back(energies[i]*energy_unit); // to internal units
+        efficiency_values.push_back(eff[i]);
+    }
+
+    // sort by energy, keep eff synced
+    std::vector<size_t> idx(efficiency_energies.size());
+    std::iota(idx.begin(), idx.end(), 0);
+    std::sort(idx.begin(), idx.end(),
+              [this](size_t a, size_t b){ return efficiency_energies[a] < efficiency_energies[b]; });
+
+    std::vector<double> e_sorted, v_sorted;
+    e_sorted.reserve(idx.size()); v_sorted.reserve(idx.size());
+    for(auto i: idx){ e_sorted.push_back(efficiency_energies[i]); v_sorted.push_back(efficiency_values[i]); }
+    efficiency_energies.swap(e_sorted);
+    efficiency_values.swap(v_sorted);
+
+    using_efficiency_function = true;
+}
+
+void DM_Detector::Import_Efficiency_Function(const std::string& filename, double energy_unit)
+{
+    std::ifstream fin(filename);
+    if(!fin)
+    {
+        std::cerr << libphysica::Formatted_String("Error","Red",true)
+                  << " in DM_Detector::Import_Efficiency_Function(): cannot open " << filename << "\n";
+        std::exit(EXIT_FAILURE);
+    }
+
+    std::vector<double> E, eff;
+    std::string line;
+    while(std::getline(fin, line))
+    {
+        auto hash = line.find('#');
+        if(hash != std::string::npos) line = line.substr(0, hash);
+
+        std::istringstream iss(line);
+        double e, v;
+        if(!(iss >> e >> v)) continue;
+        E.push_back(e);
+        eff.push_back(v);
+    }
+    Set_Efficiency_Function(E, eff, energy_unit);
+}
+
+void DM_Detector::Disable_Efficiency_Function()
+{
+    using_efficiency_function = false;
+    efficiency_energies.clear();
+    efficiency_values.clear();
+}
+
+double DM_Detector::Efficiency(double E) const
+{
+    if(!using_efficiency_function || efficiency_energies.size() < 2) return 1.0;
+
+	if(E <= efficiency_energies.front()) return 0.0;
+    if(E >= efficiency_energies.back())  return 0.0;
+
+    auto it = std::lower_bound(efficiency_energies.begin(), efficiency_energies.end(), E);
+    size_t i = (size_t)std::distance(efficiency_energies.begin(), it);
+    if(i==0) return efficiency_values.front();
+
+    double x1 = efficiency_energies[i-1], x2 = efficiency_energies[i];
+    double y1 = efficiency_values[i-1],  y2 = efficiency_values[i];
+    if(x2==x1) return y1;
+    return y1 + (y2-y1)*(E-x1)/(x2-x1);
+}
+
 std::string DM_Detector::Target_Particles()
 {
 	return targets;
@@ -499,13 +588,14 @@ std::vector<double> DM_Detector::DM_Signals_Energy_Bins(const DM_Particle& DM, D
 	else
 	{
 		std::function<double(double)> spectrum = [this, &DM, &DM_distr](double E) {
+			if(using_efficiency_function) return Efficiency(E) * dRdE(E, DM, DM_distr);
 			return dRdE(E, DM, DM_distr);
 		};
 		std::vector<double> mu_i;
-		for(unsigned int i = 0; i < number_of_bins; i++)
+		for(unsigned int i=0;i<number_of_bins;i++)
 		{
-			double mu = exposure * libphysica::Integrate(spectrum, bin_energies[i], bin_energies[i + 1]);
-			mu_i.push_back(bin_efficiencies[i] * mu);
+			double mu = exposure * libphysica::Integrate(spectrum, bin_energies[i], bin_energies[i+1]);
+			mu_i.push_back(bin_efficiencies[i] * mu); // 保留原有 bin_efficiencies 作为“额外整体因子”
 		}
 		return mu_i;
 	}

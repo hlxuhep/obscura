@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "libphysica/Natural_Units.hpp"
+
 #include "obscura/DM_Distribution.hpp"
 #include "obscura/DM_Particle.hpp"
 
@@ -54,6 +56,11 @@ class DM_Detector
 	std::vector<double> bin_energies;
 	std::vector<double> DM_Signals_Energy_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
 
+	// Continuous efficiency curve eff(E)
+	bool using_efficiency_function = false;
+	std::vector<double> efficiency_energies;
+	std::vector<double> efficiency_values;
+
 	void Print_Summary_Base(int MPI_rank = 0) const;
 
   public:
@@ -66,6 +73,15 @@ class DM_Detector
 	std::string Target_Particles();
 
 	void Set_Flat_Efficiency(double eff);
+
+	// Continuous efficiency curve eff(E)
+	void Set_Efficiency_Function(const std::vector<double>& energies,
+								const std::vector<double>& eff,
+								double energy_unit = libphysica::natural_units::keV);
+	void Import_Efficiency_Function(const std::string& filename,
+									double energy_unit = libphysica::natural_units::keV);
+	void Disable_Efficiency_Function();
+	double Efficiency(double E) const;
 
 	// DM functions
 	virtual double Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const { return 0.0; };

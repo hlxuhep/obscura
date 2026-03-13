@@ -492,6 +492,8 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Ionization_ER(XENON1T_S2_ER());
 	else if(DD_experiment == "DarkSide-50_S2")
 		DM_detector = new DM_Detector_Ionization_ER(DarkSide50_S2_ER());
+	else if(DD_experiment == "LZ_ER")
+		DM_detector = new DM_Detector_Ionization_ER(LZ_ER());
 
 	else if(DD_experiment == "XENON10_S2_Migdal")
 		DM_detector = new DM_Detector_Ionization_Migdal(XENON10_S2_Migdal());
@@ -518,7 +520,6 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Crystal(Fiducial_JWST_HgTe());
 	else if(DD_experiment == "Fiducial_JWST_CdTe")
 		DM_detector = new DM_Detector_Crystal(Fiducial_JWST_CdTe());
-
 	else
 	{
 		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Configuration::Construct_DM_Detector(): Experiment " << DD_experiment << " not recognized." << std::endl;

@@ -19,6 +19,7 @@ extern DM_Detector_Nucleus CRESST_surface();
 extern DM_Detector_Ionization_ER XENON10_S2_ER();
 extern DM_Detector_Ionization_ER XENON100_S2_ER();
 extern DM_Detector_Ionization_ER XENON1T_S2_ER();
+extern DM_Detector_Ionization_ER LZ_ER();
 extern DM_Detector_Ionization_ER DarkSide50_S2_ER();
 
 //3. Electron recoil experiments - Semiconductor/crystals
