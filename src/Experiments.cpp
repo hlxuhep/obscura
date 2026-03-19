@@ -184,6 +184,26 @@ DM_Detector_Ionization_ER XENON1T_S2_ER()
 	return detector;
 }
 
+DM_Detector_Ionization_ER XENONNT_S2_ER()
+{
+	// Source: arXiv:2601.11296
+	std::string target_name = "Xe";
+	double exposure = 7.83 * tonne * year;
+	double muPE		= 33.0;
+	double sigPE	= 7.0;
+	std::vector<unsigned long int> observed_event_bins = {694, 802, 463, 240, 178, 99, 58};
+	std::vector<unsigned int> S2_bin_ranges = {102, 157, 213, 268, 322, 377, 431, 486};
+	std::vector<double> binned_background_expectation  = {758, 851, 430, 256, 157, 111, 62};
+
+	DM_Detector_Ionization_ER detector("XENONNT_S2", exposure, target_name);
+	detector.Initialize_S2_Spectrum("Poisson+Gauss", muPE, sigPE);
+	detector.Use_PE_Bins(S2_bin_ranges);
+	detector.Set_Observed_Events(observed_event_bins);
+	detector.Set_Expected_Background(binned_background_expectation);
+	//detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
+	return detector;
+}
+
 DM_Detector_Ionization_ER LZ_ER()
 {
 	// Source: arxiv:2511.17350v1
