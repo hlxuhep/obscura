@@ -490,6 +490,8 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Ionization_ER(XENON100_S2_ER());
 	else if(DD_experiment == "XENON1T_S2")
 		DM_detector = new DM_Detector_Ionization_ER(XENON1T_S2_ER());
+	else if(DD_experiment == "XENONNT_S2")
+		DM_detector = new DM_Detector_Ionization_ER(XENONNT_S2_ER());
 	else if(DD_experiment == "DarkSide-50_S2")
 		DM_detector = new DM_Detector_Ionization_ER(DarkSide50_S2_ER());
 	else if(DD_experiment == "LZ_ER")
